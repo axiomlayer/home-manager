@@ -1,0 +1,96 @@
+{
+  "schema": "axiomlayer-inherited-workflow-archive-v1",
+  "baseline": {
+    "repository": "nix-community/home-manager",
+    "commit": "ec172013fa62135f58fb58dd17ae9651e8f39727",
+    "workflowTree": "19960ee8e5e61e8108bf13a15dbbbd6932292568",
+    "supportPaths": [
+      ".github/dependabot.yml",
+      ".github/labeler.yml"
+    ]
+  },
+  "activeWorkflow": ".github/workflows/axiomlayer-integration.yml",
+  "archiveRoot": "integration/axiomlayer/workflow-archive/files",
+  "files": [
+    {
+      "sourcePath": ".github/dependabot.yml",
+      "archivePath": "integration/axiomlayer/workflow-archive/files/.github/dependabot.yml",
+      "sourceMode": "100644",
+      "gitBlob": "c1aef523ee0ff1fcfc1814530add865a23ac52d0",
+      "bytes": 682,
+      "sha256": "7af93672dbfb690c8a3c974c1e95843ae999b08d5a7b8a1fb7e8446e4ba2bb8d"
+    },
+    {
+      "sourcePath": ".github/labeler.yml",
+      "archivePath": "integration/axiomlayer/workflow-archive/files/.github/labeler.yml",
+      "sourceMode": "100644",
+      "gitBlob": "7750a323d03aaf401121ecb828a4b95f2a63d9bd",
+      "bytes": 29034,
+      "sha256": "7a950d7a1e66baabc17c0b6f8e561025fc5ce0ee26b24fd6370daf1a3fa617e4"
+    },
+    {
+      "sourcePath": ".github/workflows/backport.yml",
+      "archivePath": "integration/axiomlayer/workflow-archive/files/.github/workflows/backport.yml",
+      "sourceMode": "100644",
+      "gitBlob": "357834472782c025af01f291d321d42970608c17",
+      "bytes": 1311,
+      "sha256": "5a54c6a507d9bd3ce578e88dace694e2efbb8913ceb12688dd6532a2e899b2a4"
+    },
+    {
+      "sourcePath": ".github/workflows/conflicts.yml",
+      "archivePath": "integration/axiomlayer/workflow-archive/files/.github/workflows/conflicts.yml",
+      "sourceMode": "100644",
+      "gitBlob": "37a2bbeabbe197404b76881ffb78d40f3baf0a38",
+      "bytes": 367,
+      "sha256": "02713f29fe7c46ea4a0e8b69e6475071b8488b6fdf4135f960432d99b77df51e"
+    },
+    {
+      "sourcePath": ".github/workflows/github_pages.yml",
+      "archivePath": "integration/axiomlayer/workflow-archive/files/.github/workflows/github_pages.yml",
+      "sourceMode": "100644",
+      "gitBlob": "4332a133dc13e80120616adc1a7e88fcc1347baf",
+      "bytes": 827,
+      "sha256": "7311579f7f76451153e75d3daa8b45a17b796646d456c62fbc74fd6e2c35b4fe"
+    },
+    {
+      "sourcePath": ".github/workflows/labeler.yml",
+      "archivePath": "integration/axiomlayer/workflow-archive/files/.github/workflows/labeler.yml",
+      "sourceMode": "100644",
+      "gitBlob": "79120c3bc937ac814d30a53ddc0bc4a5ade02c1f",
+      "bytes": 1035,
+      "sha256": "b8456786bb515047cc77bf0aee05548ab078828310bf0f565f3dc37d0599b091"
+    },
+    {
+      "sourcePath": ".github/workflows/tag-maintainers.yml",
+      "archivePath": "integration/axiomlayer/workflow-archive/files/.github/workflows/tag-maintainers.yml",
+      "sourceMode": "100644",
+      "gitBlob": "1cd6b80ad13b21c629563e35547b9dc9c86433eb",
+      "bytes": 3371,
+      "sha256": "80e56815bddfb6e8af4ef892c925cedf98e4eb0b1fc4b7621e98eb612b5b129e"
+    },
+    {
+      "sourcePath": ".github/workflows/test.yml",
+      "archivePath": "integration/axiomlayer/workflow-archive/files/.github/workflows/test.yml",
+      "sourceMode": "100644",
+      "gitBlob": "d317dd7c1bc6bc47cf5d092fb8d2fe2b7988143e",
+      "bytes": 5141,
+      "sha256": "6f8b5640606f6489b23b3a18d437557216d8110e62b582c3b0f3d854bf2550f9"
+    },
+    {
+      "sourcePath": ".github/workflows/update-maintainers.yml",
+      "archivePath": "integration/axiomlayer/workflow-archive/files/.github/workflows/update-maintainers.yml",
+      "sourceMode": "100644",
+      "gitBlob": "a4c1033bfaae1e1f7250d8b71223e1ed4388d3a7",
+      "bytes": 12068,
+      "sha256": "a55eb56e7ec2cf4b05edeae76e19009fb820b2fce341e297e77c0297eee9597c"
+    },
+    {
+      "sourcePath": ".github/workflows/validate-maintainers.yml",
+      "archivePath": "integration/axiomlayer/workflow-archive/files/.github/workflows/validate-maintainers.yml",
+      "sourceMode": "100644",
+      "gitBlob": "82a785fa0c875d4a0a9c2cab008ea92a729f0379",
+      "bytes": 1815,
+      "sha256": "ab6c9bf6a3f9c21970e21a446a826e61f9b272ce5462797f046d8d3272093fb2"
+    }
+  ]
+}

@@ -2,7 +2,8 @@
   "schema": "axiom-home-manager-integration-v1",
   "source": {
     "upstream": "nix-community/home-manager",
-    "repository": "AxiomLayer/home-manager",
+    "repository": "axiomlayer/home-manager",
+    "defaultBranch": "master",
     "version": "release-26.05",
     "commit": "ec172013fa62135f58fb58dd17ae9651e8f39727"
   },

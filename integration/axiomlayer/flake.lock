@@ -9,13 +9,13 @@
       "locked": {
         "lastModified": 1789267039,
         "narHash": "sha256-LWiBv9yAYFi2LPbUhDGHPGKYskJQjj2fw12OlyO1uQo=",
-        "owner": "AxiomLayer",
+        "owner": "axiomlayer",
         "repo": "home-manager",
         "rev": "ec172013fa62135f58fb58dd17ae9651e8f39727",
         "type": "github"
       },
       "original": {
-        "owner": "AxiomLayer",
+        "owner": "axiomlayer",
         "repo": "home-manager",
         "rev": "ec172013fa62135f58fb58dd17ae9651e8f39727",
         "type": "github"

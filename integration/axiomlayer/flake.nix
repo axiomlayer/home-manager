@@ -5,7 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/c3eea5b2156db11c7eeeada3dc737711255b253e";
 
     home-manager = {
-      url = "github:AxiomLayer/home-manager/ec172013fa62135f58fb58dd17ae9651e8f39727";
+      url = "github:axiomlayer/home-manager/ec172013fa62135f58fb58dd17ae9651e8f39727";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -40,7 +40,7 @@
                 file.".config/axiomlayer/home-manager-fleet.json".text = builtins.toJSON {
                   schema = "axiom-home-manager-fleet-probe-v1";
                   inherit system;
-                  source = "AxiomLayer/home-manager";
+                  source = "axiomlayer/home-manager";
                   upstreamRevision = "ec172013fa62135f58fb58dd17ae9651e8f39727";
                   nixpkgsRevision = "c3eea5b2156db11c7eeeada3dc737711255b253e";
                 };
@@ -56,10 +56,14 @@
         };
 
       configurations = nixpkgs.lib.genAttrs systems configurationFor;
-      activationPackages = nixpkgs.lib.mapAttrs (_: configuration: configuration.activationPackage) configurations;
+      activationPackages = nixpkgs.lib.mapAttrs (
+        _: configuration: configuration.activationPackage
+      ) configurations;
     in
     {
-      checks = nixpkgs.lib.mapAttrs (_: activationPackage: { inherit activationPackage; }) activationPackages;
+      checks = nixpkgs.lib.mapAttrs (_: activationPackage: {
+        inherit activationPackage;
+      }) activationPackages;
       packages = nixpkgs.lib.mapAttrs (_: activationPackage: {
         inherit activationPackage;
         default = activationPackage;

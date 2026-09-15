@@ -15,8 +15,7 @@ jobs:
   backport:
     name: Backport Pull Request
     if: >
-      github.repository == 'nix-community/home-manager'
-      && vars.CI_APP_ID
+      vars.CI_APP_ID
       && github.event.pull_request.merged == true
       && (
         github.event.action != 'labeled'
@@ -26,19 +25,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create GitHub App token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
+        uses: actions/create-github-app-token@v3
         if: vars.CI_APP_ID
         id: app-token
         with:
           app-id: ${{ vars.CI_APP_ID }}
           private-key: ${{ secrets.CI_APP_PRIVATE_KEY }}
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7
         with:
           token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Create backport PRs
         id: backport
-        uses: korthout/backport-action@2e830a1d0b8269505846ddd407a70876913ad1f8 # v4
+        uses: korthout/backport-action@v4
         with:
           # See https://github.com/korthout/backport-action#inputs
           github_token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}

@@ -5,9 +5,9 @@ on:
 jobs:
   triage:
     runs-on: ubuntu-latest
-    if: github.repository == 'nix-community/home-manager'
+    if: github.repository_owner == 'nix-community'
     steps:
-      - uses: mschilde/auto-label-merge-conflicts@3fdaf1c8b3f8e5b0f88753d9cb3c9c779370b3ef # master 2026-09-14
+      - uses: mschilde/auto-label-merge-conflicts@master
         with:
           CONFLICT_LABEL_NAME: "merge conflict"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

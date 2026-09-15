@@ -1,11 +1,8 @@
 name: AxiomLayer Home Manager integration
 
 on:
-  pull_request:
-  push:
-    branches:
-      - master
-      - release-26.05
+  schedule:
+    - cron: "17 5 * * *"
   workflow_dispatch:
 
 permissions:
@@ -18,24 +15,39 @@ concurrency:
 jobs:
   policy:
     name: Immutable inputs and fork boundary
+    if: >-
+      github.repository == 'axiomlayer/home-manager'
+      && github.ref == 'refs/heads/master'
+      && github.ref_protected == true
+      && github.workflow_ref == 'axiomlayer/home-manager/.github/workflows/axiomlayer-integration.yml@refs/heads/master'
+      && (github.event_name == 'schedule'
+      || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          clean: true
           fetch-depth: 0
-      - name: Install Nix
-        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
-        with:
-          extra_nix_config: |
-            experimental-features = nix-command flakes
+          persist-credentials: false
+      - name: Prove the static and adversarial policy boundary
+        run: integration/axiomlayer/test-policy.sh
+      - name: Install the exact reviewed Nix runtime
+        run: integration/axiomlayer/install-nix-ci.sh
       - name: Verify integration policy
         run: integration/axiomlayer/verify-policy.sh
 
   activation:
     name: Native activation (${{ matrix.system }})
     needs: policy
+    if: >-
+      github.repository == 'axiomlayer/home-manager'
+      && github.ref == 'refs/heads/master'
+      && github.ref_protected == true
+      && github.workflow_ref == 'axiomlayer/home-manager/.github/workflows/axiomlayer-integration.yml@refs/heads/master'
+      && (github.event_name == 'schedule'
+      || github.event_name == 'workflow_dispatch')
     strategy:
       fail-fast: false
       matrix:
@@ -60,11 +72,11 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Install Nix
-        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
         with:
-          extra_nix_config: |
-            experimental-features = nix-command flakes
+          clean: true
+          persist-credentials: false
+      - name: Install the exact reviewed Nix runtime
+        run: integration/axiomlayer/install-nix-ci.sh
       - name: Verify native runner
         shell: bash
         env:
@@ -108,7 +120,7 @@ jobs:
           jq -e --arg system "$EXPECTED_SYSTEM" '
             .schema == "axiom-home-manager-fleet-probe-v1"
             and .system == $system
-            and .source == "AxiomLayer/home-manager"
+            and .source == "axiomlayer/home-manager"
             and .upstreamRevision == "ec172013fa62135f58fb58dd17ae9651e8f39727"
             and .nixpkgsRevision == "c3eea5b2156db11c7eeeada3dc737711255b253e"
           ' "$receipt"

@@ -16,7 +16,7 @@ permissions:
 jobs:
   labels:
     runs-on: ubuntu-latest
-    if: github.repository == 'nix-community/home-manager'
+    if: github.repository_owner == 'nix-community'
     steps:
       - name: Get changed files count
         id: count
@@ -28,7 +28,7 @@ jobs:
           echo "Found $COUNT changed module files."
           echo "count=$COUNT" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/labeler@bf12e9b00b37c5c0ca2b87b79b2daf7891dbda13 # v7
+      - uses: actions/labeler@v7
         if: steps.count.outputs.count <= 10
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
