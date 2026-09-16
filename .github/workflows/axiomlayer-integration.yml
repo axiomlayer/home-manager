@@ -1,0 +1,128 @@
+name: AxiomLayer Home Manager integration
+
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: axiomlayer-home-manager-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  policy:
+    name: Immutable inputs and fork boundary
+    if: >-
+      github.repository == 'axiomlayer/home-manager'
+      && github.ref == 'refs/heads/master'
+      && github.ref_protected == true
+      && github.workflow_ref == 'axiomlayer/home-manager/.github/workflows/axiomlayer-integration.yml@refs/heads/master'
+      && (github.event_name == 'schedule'
+      || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          clean: true
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Prove the static and adversarial policy boundary
+        run: integration/axiomlayer/test-policy.sh
+      - name: Install the exact reviewed Nix runtime
+        run: integration/axiomlayer/install-nix-ci.sh
+      - name: Verify integration policy
+        run: integration/axiomlayer/verify-policy.sh
+
+  activation:
+    name: Native activation (${{ matrix.system }})
+    needs: policy
+    if: >-
+      github.repository == 'axiomlayer/home-manager'
+      && github.ref == 'refs/heads/master'
+      && github.ref_protected == true
+      && github.workflow_ref == 'axiomlayer/home-manager/.github/workflows/axiomlayer-integration.yml@refs/heads/master'
+      && (github.event_name == 'schedule'
+      || github.event_name == 'workflow_dispatch')
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - system: x86_64-linux
+            runner: ubuntu-24.04
+            kernel: Linux
+            machine: x86_64
+            home: /home/runner
+          - system: aarch64-linux
+            runner: ubuntu-24.04-arm
+            kernel: Linux
+            machine: aarch64
+            home: /home/runner
+          - system: aarch64-darwin
+            runner: macos-15
+            kernel: Darwin
+            machine: arm64
+            home: /Users/runner
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          clean: true
+          persist-credentials: false
+      - name: Install the exact reviewed Nix runtime
+        run: integration/axiomlayer/install-nix-ci.sh
+      - name: Verify native runner
+        shell: bash
+        env:
+          EXPECTED_KERNEL: ${{ matrix.kernel }}
+          EXPECTED_MACHINE: ${{ matrix.machine }}
+          EXPECTED_HOME: ${{ matrix.home }}
+        run: |
+          test "$(uname -s)" = "$EXPECTED_KERNEL"
+          test "$(uname -m)" = "$EXPECTED_MACHINE"
+          test "$HOME" = "$EXPECTED_HOME"
+          test "$(id -un)" = runner
+      - name: Evaluate every fleet configuration
+        shell: bash
+        run: |
+          nix eval --json integration/axiomlayer#lib.activationDrvPaths \
+            --override-input home-manager "path:$GITHUB_WORKSPACE" \
+            --no-write-lock-file | jq -e '
+              keys == ["aarch64-darwin", "aarch64-linux", "x86_64-linux"]
+              and all(.[]; test("^/nix/store/[a-z0-9]{32}-.*\\.drv$"))
+            '
+      - name: Build native activation package
+        shell: bash
+        env:
+          SYSTEM: ${{ matrix.system }}
+        run: |
+          nix build --print-build-logs \
+            "integration/axiomlayer#packages.$SYSTEM.activationPackage" \
+            --override-input home-manager "path:$GITHUB_WORKSPACE" \
+            --no-write-lock-file \
+            --out-link result-axiomlayer-home
+      - name: Activate in the ephemeral runner home
+        shell: bash
+        env:
+          HOME: /tmp/axiomlayer-home-manager
+          EXPECTED_SYSTEM: ${{ matrix.system }}
+        run: |
+          mkdir -p "$HOME"
+          result-axiomlayer-home/activate
+          receipt="$HOME/.config/axiomlayer/home-manager-fleet.json"
+          test -f "$receipt"
+          jq -e --arg system "$EXPECTED_SYSTEM" '
+            .schema == "axiom-home-manager-fleet-probe-v1"
+            and .system == $system
+            and .source == "axiomlayer/home-manager"
+            and .upstreamRevision == "ec172013fa62135f58fb58dd17ae9651e8f39727"
+            and .nixpkgsRevision == "c3eea5b2156db11c7eeeada3dc737711255b253e"
+          ' "$receipt"
+          test -x "$HOME/.config/axiomlayer/hello"
+          "$HOME/.config/axiomlayer/hello" --version >/dev/null

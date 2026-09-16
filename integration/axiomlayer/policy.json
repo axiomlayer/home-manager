@@ -1,0 +1,21 @@
+{
+  "schema": "axiom-home-manager-integration-v1",
+  "source": {
+    "upstream": "nix-community/home-manager",
+    "repository": "axiomlayer/home-manager",
+    "defaultBranch": "master",
+    "version": "release-26.05",
+    "commit": "ec172013fa62135f58fb58dd17ae9651e8f39727"
+  },
+  "nixpkgs": {
+    "upstream": "NixOS/nixpkgs",
+    "version": "nixos-26.05",
+    "commit": "c3eea5b2156db11c7eeeada3dc737711255b253e"
+  },
+  "homeStateVersion": "26.05",
+  "systems": [
+    "x86_64-linux",
+    "aarch64-linux",
+    "aarch64-darwin"
+  ]
+}
